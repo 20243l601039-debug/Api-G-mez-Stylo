@@ -5,7 +5,6 @@ require('dotenv').config();
 const app = express();
 
 // --- CONFIGURACIÓN CORS ---
-// Esto permite que tu celular y Ngrok se conecten sin bloqueos
 app.use(cors());
 app.use(express.json());
 
@@ -19,43 +18,28 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/usuarios.routes');
 
-// --- REGISTRO DE RUTAS (SIN MIDDLEWARES DE BLOQUEO) ---
-
-// Dashboard y Categorías
+// --- REGISTRO DE RUTAS ---
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/categorias', categoriasRoutes);
-
-// Productos (Ruta: http://.../api/productos)
 app.use('/api/productos', productosRoutes);
-
-// 🛒 CARRITO (Ruta: http://.../api/carrito)
-// Nota: Quitamos cualquier 'verifyToken' de aquí para la presentación
 app.use('/api/carrito', carritoRoutes);
-
-// Pedidos y Pagos
 app.use('/api/pedidos', pedidosRoutes);
 app.use('/api/pago', paymentRoutes);
-
-// Autenticación y Usuarios
 app.use('/api/auth', authRoutes);
-app.use('/api', userRoutes); // Esto habilita /api/usuarios
+app.use('/api', userRoutes); 
 
-
-// --- RUTA DE PRUEBA ---
+// --- RUTA DE PRUEBA (Para saber si el server vive) ---
 app.get('/', (req, res) => {
-  res.send('API de Gómez Stylo funcionando 🚀');
+  res.send('✅ API de Gómez Stylo funcionando en la nube 🚀');
 });
 
 // --- INICIAR SERVIDOR ---
+// Render asigna el puerto automáticamente mediante process.env.PORT
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en puerto ${PORT}`);
-});
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log('----------------------------------------------------');
   console.log(`✅ Servidor Gómez Stylo corriendo en puerto ${PORT}`);
-  console.log(`📡 Local: http://192.168.1.75:${PORT}`);
-  console.log(`🌐 Revisa tu terminal de NGROK para la URL pública`);
+  console.log(`🌐 URL de Render activa`);
   console.log('----------------------------------------------------');
 });
